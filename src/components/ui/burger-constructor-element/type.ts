@@ -1,3 +1,4 @@
+// src/components/ui/burger-constructor-element/type.ts
 import { TConstructorIngredient } from '@utils-types';
 
 export type BurgerConstructorElementUIProps = {
@@ -7,4 +8,5 @@ export type BurgerConstructorElementUIProps = {
   handleMoveUp: () => void;
   handleMoveDown: () => void;
   handleClose: () => void;
+  onRemove?: (id: string) => void; // 👈 Добавили этот проп
 };

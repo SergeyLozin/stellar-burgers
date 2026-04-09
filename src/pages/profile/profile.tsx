@@ -1,26 +1,36 @@
+// src/pages/profile/profile.tsx
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { updateUser, resetError } from '../../services/slices/authSlice';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const dispatch = useDispatch();
+  const { user, error } = useSelector((state) => state.auth);
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: '',
+    email: '',
     password: ''
   });
 
+  // Заполняем форму данными из Redux, когда пользователь загрузился
   useEffect(() => {
-    setFormValue((prevState) => ({
-      ...prevState,
-      name: user?.name || '',
-      email: user?.email || ''
-    }));
+    if (user) {
+      setFormValue({
+        name: user.name,
+        email: user.email,
+        password: '' // Пароль не приходит с сервера, поле пустое
+      });
+    }
   }, [user]);
+
+  // Очищаем ошибки при уходе со страницы
+  useEffect(() => {
+    return () => {
+      dispatch(resetError());
+    };
+  }, [dispatch]);
 
   const isFormChanged =
     formValue.name !== user?.name ||
@@ -29,13 +39,22 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    
+    // Собираем данные для отправки
+    const dataToSend: { name?: string; email?: string; password?: string } = {};
+    if (formValue.name !== user?.name) dataToSend.name = formValue.name;
+    if (formValue.email !== user?.email) dataToSend.email = formValue.email;
+    if (formValue.password) dataToSend.password = formValue.password;
+
+    dispatch(updateUser(dataToSend));
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
+    // Возвращаем значения как были до редактирования
     setFormValue({
-      name: user.name,
-      email: user.email,
+      name: user?.name || '',
+      email: user?.email || '',
       password: ''
     });
   };
@@ -54,8 +73,7 @@ export const Profile: FC = () => {
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
+      
     />
   );
-
-  return null;
 };

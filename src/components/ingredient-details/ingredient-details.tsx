@@ -1,11 +1,21 @@
-import { FC } from 'react';
+// src/components/ingredient-details/ingredient-details.tsx
+import { FC, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector } from '../../services/store';
 import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
 
 export const IngredientDetails: FC = () => {
-  /** TODO: взять переменную из стора */
-  const ingredientData = null;
+  const { id } = useParams<{ id: string }>();
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
 
+  // 👇 Ищем ингредиент только если id определён и ингредиенты загружены
+  const ingredientData = useMemo(() => {
+    if (!id || !ingredients.length) return null;
+    return ingredients.find((ing) => ing._id === id) || null;
+  }, [id, ingredients]);
+
+  // Показываем прелоадер, если данные ещё не готовы
   if (!ingredientData) {
     return <Preloader />;
   }

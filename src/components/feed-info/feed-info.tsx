@@ -9,7 +9,7 @@ const getOrders = (orders: TOrder[], status: string): number[] =>
     .map((item) => item.number)
     .slice(0, 20);
 
-export const FeedInfo: FC = () => {
+export const FeedInfo: FC<{ total?: number; totalToday?: number }> = ({ total, totalToday }) => {
   /** TODO: взять переменные из стора */
   const orders: TOrder[] = [];
   const feed = {};
