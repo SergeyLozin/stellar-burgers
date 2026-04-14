@@ -2,7 +2,6 @@ export type FeedInfoUIProps = {
   feed: any;
   readyOrders: number[];
   pendingOrders: number[];
- 
 };
 
 export type HalfColumnProps = {

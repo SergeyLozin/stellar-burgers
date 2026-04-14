@@ -1,4 +1,3 @@
-// src/components/ui/burger-constructor/type.ts
 import { TOrder, TConstructorIngredient } from '@utils-types';
 
 export type BurgerConstructorUIProps = {
@@ -11,5 +10,5 @@ export type BurgerConstructorUIProps = {
   orderModalData: TOrder | null;
   onOrderClick: () => void;
   closeOrderModal: () => void;
-  onRemoveIngredient?: (id: string) => void; // 👈 Добавили этот проп
+  onRemoveIngredient?: (id: string) => void;
 };

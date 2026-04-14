@@ -1,4 +1,3 @@
-// src/components/profile-menu/profile-menu.tsx
 import { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from '../../services/store';
@@ -11,9 +10,11 @@ export const ProfileMenu: FC = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(logoutUser()).unwrap().then(() => {
-      navigate('/');
-    });
+    dispatch(logoutUser())
+      .unwrap()
+      .then(() => {
+        navigate('/');
+      });
   };
 
   return <ProfileMenuUI handleLogout={handleLogout} pathname={pathname} />;

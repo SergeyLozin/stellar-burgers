@@ -12,7 +12,7 @@ export const Register: FC = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const { error, user } = useSelector((state) => state.auth);
 
   // Редирект после успешной регистрации (так же, как и при логине)
@@ -22,11 +22,12 @@ export const Register: FC = () => {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       dispatch(resetError());
-    };
-  }, [dispatch]);
+    },
+    [dispatch]
+  );
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();

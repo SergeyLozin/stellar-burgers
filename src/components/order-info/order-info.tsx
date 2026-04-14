@@ -1,6 +1,5 @@
-// src/components/order-info/order-info.tsx
 import { FC, useMemo } from 'react';
-import { useParams } from 'react-router-dom'; // 👈 Читаем номер из URL
+import { useParams } from 'react-router-dom';
 import { useSelector } from '../../services/store';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
@@ -11,12 +10,11 @@ export const OrderInfo: FC = () => {
   const orders = useSelector((state) => state.feed.orders);
   const ingredients = useSelector((state) => state.ingredients.ingredients);
 
-  // Ищем заказ в массиве заказов из стора
-  const orderData: TOrder | undefined = useMemo(() => {
-    return orders.find((order) => order.number.toString() === number);
-  }, [orders, number]);
+  const orderData: TOrder | undefined = useMemo(
+    () => orders.find((order) => order.number.toString() === number),
+    [orders, number]
+  );
 
-  // Готовим данные для отображения (состав заказа)
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 

@@ -14,23 +14,22 @@ export const Profile: FC = () => {
     password: ''
   });
 
-  // Заполняем форму данными из Redux, когда пользователь загрузился
   useEffect(() => {
     if (user) {
       setFormValue({
         name: user.name,
         email: user.email,
-        password: '' // Пароль не приходит с сервера, поле пустое
+        password: ''
       });
     }
   }, [user]);
 
-  // Очищаем ошибки при уходе со страницы
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       dispatch(resetError());
-    };
-  }, [dispatch]);
+    },
+    [dispatch]
+  );
 
   const isFormChanged =
     formValue.name !== user?.name ||
@@ -39,7 +38,7 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    
+
     // Собираем данные для отправки
     const dataToSend: { name?: string; email?: string; password?: string } = {};
     if (formValue.name !== user?.name) dataToSend.name = formValue.name;
@@ -73,7 +72,6 @@ export const Profile: FC = () => {
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
-      
     />
   );
 };

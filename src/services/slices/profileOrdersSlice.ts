@@ -12,7 +12,7 @@ type TProfileOrdersState = {
 const initialState: TProfileOrdersState = {
   orders: [],
   isLoading: false,
-  error: null,
+  error: null
 };
 
 export const fetchProfileOrders = createAsyncThunk(
@@ -20,8 +20,12 @@ export const fetchProfileOrders = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       return await getOrdersApi();
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Ошибка загрузки истории заказов');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Ошибка загрузки истории заказов';
+      return rejectWithValue(message);
     }
   }
 );
@@ -44,7 +48,7 @@ const profileOrdersSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       });
-  },
+  }
 });
 
 export default profileOrdersSlice.reducer;

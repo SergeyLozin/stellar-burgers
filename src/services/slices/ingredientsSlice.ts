@@ -12,15 +12,21 @@ type TIngredientsState = {
 const initialState: TIngredientsState = {
   ingredients: [],
   isLoading: false,
-  error: null,
+  error: null
 };
 
 // Асинхронный экшен для загрузки ингредиентов
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
-  async () => {
-    const data = await getIngredientsApi();
-    return data;
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getIngredientsApi();
+      return data;
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Ошибка загрузки ингредиентов';
+      return rejectWithValue(message);
+    }
   }
 );
 
@@ -40,9 +46,9 @@ const ingredientsSlice = createSlice({
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка загрузки ингредиентов';
+        state.error = action.payload as string;
       });
-  },
+  }
 });
 
 export default ingredientsSlice.reducer;

@@ -7,7 +7,9 @@ import { fetchProfileOrders } from '../../services/slices/profileOrdersSlice';
 
 export const ProfileOrders: FC = () => {
   const dispatch = useDispatch();
-  const { orders, isLoading, error } = useSelector((state) => state.profileOrders);
+  const { orders, isLoading, error } = useSelector(
+    (state) => state.profileOrders
+  );
 
   useEffect(() => {
     dispatch(fetchProfileOrders());
@@ -19,7 +21,7 @@ export const ProfileOrders: FC = () => {
 
   if (error) {
     return (
-      <div className="text text_type_main-medium pt-10 text-center">
+      <div className='text text_type_main-medium pt-10 text-center'>
         Ошибка: {error}
       </div>
     );
@@ -27,7 +29,7 @@ export const ProfileOrders: FC = () => {
 
   if (!orders.length) {
     return (
-      <div className="text text_type_main-medium pt-10 text-center">
+      <div className='text text_type_main-medium pt-10 text-center'>
         У вас пока нет заказов
       </div>
     );

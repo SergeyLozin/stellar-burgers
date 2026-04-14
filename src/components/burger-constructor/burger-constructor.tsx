@@ -1,18 +1,22 @@
 // src/components/burger-constructor/burger-constructor.tsx
 import { FC, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom'; // 👈 Добавляем хук навигации
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
-import { sendOrder, closeOrderModal, removeIngredient } from '../../services/slices/burgerConstructorSlice';
+import {
+  sendOrder,
+  closeOrderModal,
+  removeIngredient
+} from '../../services/slices/burgerConstructorSlice';
 import { BurgerConstructorUI } from '@ui';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // 👈 Инициализируем
-  
+  const navigate = useNavigate();
+
   const { bun, ingredients, orderRequest, orderModalData } = useSelector(
     (state) => state.burgerConstructor
   );
-  
+
   // 👇 Берём данные пользователя из Redux
   const { user } = useSelector((state) => state.auth);
 
@@ -22,7 +26,6 @@ export const BurgerConstructor: FC = () => {
       return;
     }
 
-    // 👇 ГЛАВНОЕ ИСПРАВЛЕНИЕ: проверка авторизации перед заказом
     if (!user) {
       navigate('/login');
       return;

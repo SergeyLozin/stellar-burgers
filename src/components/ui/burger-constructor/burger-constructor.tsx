@@ -1,4 +1,3 @@
-// src/components/ui/burger-constructor/burger-constructor.tsx
 import React, { FC } from 'react';
 import {
   Button,
@@ -18,7 +17,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   orderModalData,
   onOrderClick,
   closeOrderModal,
-  onRemoveIngredient // 👈 Принимаем проп
+  onRemoveIngredient
 }) => (
   <section className={styles.burger_constructor}>
     {constructorItems.bun ? (
@@ -38,7 +37,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         Выберите булки
       </div>
     )}
-    
+
     <ul className={styles.elements}>
       {constructorItems.ingredients.length > 0 ? (
         constructorItems.ingredients.map(
@@ -48,7 +47,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
               index={index}
               totalItems={constructorItems.ingredients.length}
               key={item.id}
-              onRemove={onRemoveIngredient} // 👈 Передаём onRemove
+              onRemove={onRemoveIngredient}
             />
           )
         )
@@ -60,7 +59,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         </div>
       )}
     </ul>
-    
+
     {constructorItems.bun ? (
       <div className={`${styles.element} mt-4 mr-4`}>
         <ConstructorElement
@@ -78,7 +77,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         Выберите булки
       </div>
     )}
-    
+
     <div className={`${styles.total} mt-10 mr-4`}>
       <div className={`${styles.cost} mr-10`}>
         <p className={`text ${styles.text} mr-2`}>{price}</p>

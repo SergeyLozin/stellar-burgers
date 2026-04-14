@@ -7,7 +7,7 @@ type TBurgerConstructorState = {
   bun: TConstructorIngredient | null;
   ingredients: TConstructorIngredient[];
   orderRequest: boolean;
-  orderModalData: TOrder | null; // 👈 Изменили на TOrder | null
+  orderModalData: TOrder | null;
   error: string | null;
 };
 
@@ -16,7 +16,7 @@ const initialState: TBurgerConstructorState = {
   ingredients: [],
   orderRequest: false,
   orderModalData: null,
-  error: null,
+  error: null
 };
 
 export const sendOrder = createAsyncThunk(
@@ -25,8 +25,10 @@ export const sendOrder = createAsyncThunk(
     try {
       const response = await orderBurgerApi(ingredientsIds);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Ошибка оформления заказа');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Ошибка оформления заказа';
+      return rejectWithValue(message);
     }
   }
 );
@@ -53,7 +55,7 @@ const burgerConstructorSlice = createSlice({
     },
     closeOrderModal: (state) => {
       state.orderModalData = null;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -63,8 +65,8 @@ const burgerConstructorSlice = createSlice({
       })
       .addCase(sendOrder.fulfilled, (state, action) => {
         state.orderRequest = false;
-        
-        // 👇 Преобразуем ответ API в формат TOrder, который ожидает UI
+
+        // Преобразуем ответ API в формат TOrder, который ожидает UI
         const apiOrder = action.payload.order;
         state.orderModalData = {
           _id: apiOrder._id,
@@ -75,7 +77,7 @@ const burgerConstructorSlice = createSlice({
           number: apiOrder.number,
           ingredients: [] // API не возвращает ingredients при создании, оставляем пустым
         } as TOrder;
-        
+
         // Очищаем конструктор после успешного заказа
         state.bun = null;
         state.ingredients = [];
@@ -84,10 +86,14 @@ const burgerConstructorSlice = createSlice({
         state.orderRequest = false;
         state.error = action.payload as string;
       });
-  },
+  }
 });
 
-export const { addIngredient, removeIngredient, clearConstructor, closeOrderModal } =
-  burgerConstructorSlice.actions;
+export const {
+  addIngredient,
+  removeIngredient,
+  clearConstructor,
+  closeOrderModal
+} = burgerConstructorSlice.actions;
 
 export default burgerConstructorSlice.reducer;

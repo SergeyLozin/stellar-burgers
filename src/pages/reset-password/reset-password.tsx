@@ -31,7 +31,7 @@ export const ResetPassword: FC = () => {
       token={token}
       setToken={setToken}
       handleSubmit={handleSubmit}
-      errorText="" 
+      errorText=''
     />
   );
 };

@@ -7,7 +7,9 @@ import { fetchFeeds } from '../../services/slices/feedSlice';
 
 export const Feed: FC = () => {
   const dispatch = useDispatch();
-  const { orders, isLoading, error, total, totalToday } = useSelector((state) => state.feed);
+  const { orders, isLoading, error, total, totalToday } = useSelector(
+    (state) => state.feed
+  );
 
   useEffect(() => {
     dispatch(fetchFeeds());
@@ -19,9 +21,9 @@ export const Feed: FC = () => {
 
   if (error) {
     return (
-      <div className="text text_type_main-medium pt-10 text-center">
+      <div className='text text_type_main-medium pt-10 text-center'>
         Ошибка: {error}
-        <button onClick={handleGetFeeds} className="button button_primary mt-4">
+        <button onClick={handleGetFeeds} className='button button_primary mt-4'>
           Попробовать снова
         </button>
       </div>
@@ -32,7 +34,6 @@ export const Feed: FC = () => {
     return <Preloader />;
   }
 
-  // 👇 Передаём статистику в UI
   return (
     <FeedUI
       orders={orders}

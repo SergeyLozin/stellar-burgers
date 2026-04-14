@@ -22,7 +22,7 @@ export const ForgotPassword: FC = () => {
       email={email}
       setEmail={setEmail}
       handleSubmit={handleSubmit}
-      errorText="" 
+      errorText=''
     />
   );
 };

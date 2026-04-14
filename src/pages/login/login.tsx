@@ -1,4 +1,3 @@
-// src/pages/login/login.tsx
 import { FC, SyntheticEvent, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
@@ -12,23 +11,23 @@ export const Login: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const { error, user } = useSelector((state) => state.auth);
 
-  // Если пользователь вошел - редиректим туда, откуда пытались зайти, или на главную
   useEffect(() => {
     if (user) {
-      const from = (location.state as { from?: Location })?.from?.pathname || '/';
+      const from =
+        (location.state as { from?: Location })?.from?.pathname || '/';
       navigate(from, { replace: true });
     }
   }, [user, navigate, location]);
 
-  // Очищаем ошибки при размонтировании
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       dispatch(resetError());
-    };
-  }, [dispatch]);
+    },
+    [dispatch]
+  );
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();

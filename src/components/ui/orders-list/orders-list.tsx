@@ -10,7 +10,7 @@ export const OrdersListUI: FC<OrdersListUIProps> = ({ orderByDate }) => {
   if (orderByDate.length > 0) {
     console.log('📦 Первый заказ для OrderCard:', orderByDate[0]);
   }
-  
+
   return (
     <div className={`${styles.content}`}>
       {orderByDate.map((order) => (

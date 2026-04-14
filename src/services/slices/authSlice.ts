@@ -1,11 +1,11 @@
 // src/services/slices/authSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { 
-  registerUserApi, 
-  loginUserApi, 
-  getUserApi, 
-  updateUserApi, 
-  logoutApi 
+import {
+  registerUserApi,
+  loginUserApi,
+  getUserApi,
+  updateUserApi,
+  logoutApi
 } from '@api';
 import { TRegisterData, TLoginData } from '@api'; // Типы из burger-api.ts
 import { TUser } from '@utils-types';
@@ -20,7 +20,7 @@ type TAuthState = {
 const initialState: TAuthState = {
   isAuthChecked: false,
   user: null,
-  error: null,
+  error: null
 };
 
 // === Async Thunks ===
@@ -35,8 +35,10 @@ export const registerUser = createAsyncThunk(
       localStorage.setItem('refreshToken', response.refreshToken);
       setCookie('accessToken', response.accessToken);
       return response.user;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Ошибка регистрации';
+      return rejectWithValue(message);
     }
   }
 );
@@ -50,8 +52,9 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem('refreshToken', response.refreshToken);
       setCookie('accessToken', response.accessToken);
       return response.user;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Ошибка входа';
+      return rejectWithValue(message);
     }
   }
 );
@@ -66,11 +69,13 @@ export const getUser = createAsyncThunk(
     try {
       const response = await getUserApi();
       return response.user;
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Если токен протух или неверный
       localStorage.removeItem('refreshToken');
       deleteCookie('accessToken');
-      return rejectWithValue(error.message);
+      const message =
+        error instanceof Error ? error.message : 'Ошибка авторизации';
+      return rejectWithValue(message);
     }
   }
 );
@@ -82,8 +87,10 @@ export const updateUser = createAsyncThunk(
     try {
       const response = await updateUserApi(data);
       return response.user;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Ошибка обновления данных';
+      return rejectWithValue(message);
     }
   }
 );
@@ -97,8 +104,9 @@ export const logoutUser = createAsyncThunk(
       localStorage.removeItem('refreshToken');
       deleteCookie('accessToken');
       return null;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Ошибка выхода';
+      return rejectWithValue(message);
     }
   }
 );
@@ -109,12 +117,16 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     // Сброс ошибки
-    resetError: (state) => { state.error = null; }
+    resetError: (state) => {
+      state.error = null;
+    }
   },
   extraReducers: (builder) => {
     builder
       // Register
-      .addCase(registerUser.pending, (state) => { state.error = null; })
+      .addCase(registerUser.pending, (state) => {
+        state.error = null;
+      })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.isAuthChecked = true;
@@ -124,7 +136,9 @@ const authSlice = createSlice({
         state.isAuthChecked = true;
       })
       // Login
-      .addCase(loginUser.pending, (state) => { state.error = null; })
+      .addCase(loginUser.pending, (state) => {
+        state.error = null;
+      })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.isAuthChecked = true;
@@ -140,18 +154,24 @@ const authSlice = createSlice({
       })
       .addCase(getUser.rejected, (state) => {
         state.user = null;
-        state.isAuthChecked = true; // Важно: проверка завершена, пользователя нет
+        state.isAuthChecked = true;
       })
       // Update User
       .addCase(updateUser.fulfilled, (state, action) => {
         state.user = action.payload;
       })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
       // Logout
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isAuthChecked = true;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.error = action.payload as string;
       });
-  },
+  }
 });
 
 export const { resetError } = authSlice.actions;

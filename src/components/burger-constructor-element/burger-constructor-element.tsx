@@ -4,11 +4,10 @@ import { BurgerConstructorElementUI } from '@ui';
 import { BurgerConstructorElementProps } from './type';
 
 export const BurgerConstructorElement: FC<BurgerConstructorElementProps> = memo(
-  ({ ingredient, index, totalItems, onRemove }) => { // 👈 Принимаем onRemove
+  ({ ingredient, index, totalItems, onRemove }) => {
     const handleMoveDown = () => {};
     const handleMoveUp = () => {};
 
-    // 👇 Реализуем удаление
     const handleClose = () => {
       if (onRemove) {
         onRemove(ingredient.id);
@@ -22,8 +21,8 @@ export const BurgerConstructorElement: FC<BurgerConstructorElementProps> = memo(
         totalItems={totalItems}
         handleMoveUp={handleMoveUp}
         handleMoveDown={handleMoveDown}
-        handleClose={handleClose} // 👈 Передаём реализованный обработчик
-        onRemove={onRemove} // 👈 На всякий случай передаём и напрямую
+        handleClose={handleClose}
+        onRemove={onRemove}
       />
     );
   }

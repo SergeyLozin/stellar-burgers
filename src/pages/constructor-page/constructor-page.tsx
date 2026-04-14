@@ -1,4 +1,3 @@
-// src/pages/constructor-page/constructor-page.tsx
 import styles from './constructor-page.module.css';
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
@@ -11,7 +10,7 @@ export const ConstructorPage: FC = () => (
     </h1>
     <div className={`${styles.main} pl-5 pr-5`}>
       <BurgerIngredients />
-      <BurgerConstructor /> {/* 👈 Должен быть здесь! */}
+      <BurgerConstructor />
     </div>
   </main>
 );
