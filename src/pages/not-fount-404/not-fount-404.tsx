@@ -1,7 +1,8 @@
+// src/pages/not-fount-404/not-fount-404.tsx
 import { FC } from 'react';
 
 export const NotFound404: FC = () => (
-  <h3 className={`pb-6 text text_type_main-large`}>
-    Страница не найдена. Ошибка 404.
-  </h3>
+  <div className='text text_type_main-medium pt-10 text-center'>
+    404 — Страница не найдена
+  </div>
 );
