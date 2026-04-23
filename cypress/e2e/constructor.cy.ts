@@ -30,8 +30,9 @@ describe('Страница конструктора бургера', () => {
       .contains('Добавить')
       .click();
 
-    cy.contains('Краторная булка N-200i (верх)').should('exist');
-    cy.contains('Краторная булка N-200i (низ)').should('exist');
+    // Проверяем, что булка появилась в конструкторе
+    cy.get('[data-cy="burger-constructor"]').should('contain', 'Краторная булка N-200i (верх)');
+    cy.get('[data-cy="burger-constructor"]').should('contain', 'Краторная булка N-200i (низ)');
   });
 
   it('должен добавлять начинку в конструктор', () => {
@@ -40,26 +41,32 @@ describe('Страница конструктора бургера', () => {
       .contains('Добавить')
       .click();
 
-    cy.contains('Биокотлета из марсианской Магнолии').should('exist');
+    // Проверяем, что начинка появилась в конструкторе
+    cy.get('[data-cy="burger-constructor"]').should('contain', 'Биокотлета из марсианской Магнолии');
   });
 
-  it('должен открывать модальное окно при клике на ингредиент', () => {
-    cy.get('li').first().click();
-    cy.contains('Детали ингредиента').should('exist');
+  it('должен открывать модальное окно и показывать правильный ингредиент', () => {
+    // Кликаем на первый ингредиент
+    cy.get('[data-cy="ingredients-list"] li').first().click();
+    
+    // Проверяем, что модальное окно открылось и содержит правильный ингредиент
+    cy.get('[data-cy="modal"]').should('exist');
+    cy.get('[data-cy="modal"]').should('contain', 'Детали ингредиента');
+    cy.get('[data-cy="modal"]').should('contain', 'Краторная булка N-200i');
   });
 
   it('должен закрывать модальное окно по клику на крестик', () => {
-    cy.get('li').first().click();
-    cy.contains('Детали ингредиента').should('exist');
+    cy.get('[data-cy="ingredients-list"] li').first().click();
+    cy.get('[data-cy="modal"]').should('exist');
     cy.get('[data-cy="modal-close-btn"]').click();
-    cy.contains('Детали ингредиента').should('not.exist');
+    cy.get('[data-cy="modal"]').should('not.exist');
   });
 
   it('должен закрывать модальное окно по клику на оверлей', () => {
-    cy.get('li').first().click();
-    cy.contains('Детали ингредиента').should('exist');
+    cy.get('[data-cy="ingredients-list"] li').first().click();
+    cy.get('[data-cy="modal"]').should('exist');
     cy.get('[data-cy="modal-overlay"]').click({ force: true });
-    cy.contains('Детали ингредиента').should('not.exist');
+    cy.get('[data-cy="modal"]').should('not.exist');
   });
 
   it('должен создавать заказ и очищать конструктор', () => {
@@ -75,31 +82,28 @@ describe('Страница конструктора бургера', () => {
       .contains('Добавить')
       .click();
 
+    // Проверяем, что ингредиенты в конструкторе
+    cy.get('[data-cy="burger-constructor"]').should('contain', 'Биокотлета из марсианской Магнолии');
+
     // Оформляем заказ
     cy.contains('Оформить заказ').click();
 
     // Ждём ответа от сервера
     cy.wait('@createOrder');
 
-    // Проверяем модальное окно
+    // Проверяем модальное окно с номером заказа
+    cy.get('[data-cy="modal"]').should('exist');
     cy.contains('12345').should('exist');
 
     // Закрываем модальное окно
     cy.get('[data-cy="modal-close-btn"]').click();
-
-    // Ждём закрытия модалки
     cy.get('[data-cy="modal"]').should('not.exist');
 
-    // Ждём обновления DOM
-    cy.wait(1000);
-
-    // Проверяем, что кнопка "Оформить заказ" существует
-    cy.contains('Оформить заказ').should('exist');
-
-    // Проверяем, что булок нет
-    cy.contains('Краторная булка N-200i (верх)').should('not.exist');
-    cy.contains('Краторная булка N-200i (низ)').should('not.exist');
-
+    // Проверяем, что конструктор очистился (булок и начинки нет)
+    cy.get('[data-cy="burger-constructor"]').should('not.contain', 'Краторная булка N-200i (верх)');
+    cy.get('[data-cy="burger-constructor"]').should('not.contain', 'Краторная булка N-200i (низ)');
+    cy.get('[data-cy="burger-constructor"]').should('not.contain', 'Биокотлета из марсианской Магнолии');
+    
     // Проверяем, что появились сообщения "Выберите булки" и "Выберите начинку"
     cy.contains('Выберите булки').should('exist');
     cy.contains('Выберите начинку').should('exist');
